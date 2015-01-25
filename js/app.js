@@ -27,19 +27,20 @@ function app() {
 
         };
         // alert()
-
-        var hero = id('guy');
-        var ground = id('ground');
+var ground = id('ground');
         var groundPosition = {
-            x:0,
-            y:0
-        } //[0 , 0]
-        var heroPosition =  {
-            x:20,
-            y:ground.offsetHeight
-        } // [20 , ground.offsetHeight] //I want guy to start above the ground
+                x: 0,
+                y: 0
+            } //[0 , 0]
 
-        var plotObject = function(obj, coordinates) {//alert(coordinates.x)
+        var hero = {
+        id :id('guy'),
+        x :20 ,
+        y :ground.offsetHeight ,
+        velocity: 20
+    }
+
+        var plotObject = function(obj, coordinates) { //alert(coordinates.x)
             // We changed our origin point from top left to bottom left to be congruent with a classical scheme
             // We also relocated our origin point of place objects to the bottom left
             obj.style.left = coordinates.x + 'px';
@@ -48,25 +49,50 @@ function app() {
         };
         // alert(document.querySelector('body').offsetHeight)
         plotObject(ground, groundPosition);
-        plotObject(hero, heroPosition);
+        plotObject(hero.id, hero);
 
-document.onkeydown=function(e){
-    var evtobj = window.event? event : e
-// alert(3)
-    if(evtobj.keyCode==37){ //left arrow pressed
-        heroPosition.x += -1;
+        document.onkeydown = function(e) {
+                var evtobj = window.event ? event : e
+                    // alert(3)
+                if (evtobj.keyCode == 37) { //left arrow pressed
+                    hero.x += -5;
 
-    }
+                }
 
-    if(evtobj.keyCode==39){ //right arrow pressed
-        heroPosition.x += 1;
+                if (evtobj.keyCode == 39) { //right arrow pressed
+                    hero.x += 5;
 
-    }
-    plotObject(hero , heroPosition );
+                }
 
-}
+                plotObject(hero.id, hero );
+
+            }
+
+            document.onkeyup = function() {
+                var evtobj = window.event ? event : e
+
+            if (evtobj.keyCode == 38 && hero.velocity===20){
+                var gravity = -1;
+
+                var jump = setInterval(function(){
+
+                    hero.y += hero.velocity;
+
+                    plotObject(hero.id, hero );
+
+                    hero.velocity += gravity
+
+                    if (hero.velocity<=-21){
+                        hero.velocity = 20;
+                        clearInterval(jump);
+
+                    }
+
+                } , 50)
+            }
+
+        }
 
 
     })
-
 }
